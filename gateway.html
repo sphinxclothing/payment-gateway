@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Testing Payment Gateway!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            color: #010f1c;
+            font-family: "Jost", Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #efefef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            width: 100%;
+        }
+
+        section {
+            max-width: 95%;
+            max-height: 90vh;
+            width: 600px;
+            background: #fff;
+            padding: 40px;
+            overflow-y: auto;
+            border-top: 10px solid #0989ff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .flex {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .flex input {
+            border: none;
+            outline: none;
+            padding: 0px 20px;
+            height: 50px;
+            width: 100%;
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            transition: border 0.3s;
+        }
+
+        .m10 {
+            margin-top: 10px;
+        }
+
+        .m20 {
+            margin-top: 20px;
+        }
+
+        button {
+            width: 200px;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            height: 50px;
+            background: #0989ff;
+            color: #fff;
+            padding: 0px 20px;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        input:focus {
+            border: 1px solid #0989ff;
+        }
+
+        button:hover {
+            background: #0870d0;
+        }
+
+        .get_qr {
+            height: 200px;
+            width: 200px;
+            border: 1px solid #999;
+            background: #efefef;
+            border-radius: 4px;
+        }
+
+        .qr_code {
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+
+        p {
+            color: #7a7a7a;
+            font-size: 16px;
+            line-height: 24px;
+        }
+
+        .im {
+            max-width: 100%;
+            width: 300px;
+        }
+
+        .timer {
+            margin: 20px 0;
+            font-size: 20px;
+            font-weight: bold;
+            color: #d9534f; /* Warning color */
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var timerDuration = 105; // 1 min 45 secs
+            var timerId = setInterval(function() {
+                if (timerDuration <= 0) {
+                    clearInterval(timerId);
+                    alert("Payment was aborted");
+                    window.location.reload(); // Reload the page or redirect to another page
+                } else {
+                    var minutes = Math.floor(timerDuration / 60);
+                    var seconds = timerDuration % 60;
+                    $(".timer").text("Payment will be aborted in " + minutes + "m " + seconds + "s");
+                    timerDuration--;
+                }
+            }, 1000);
+
+            $(".generate_qr").click(function() {
+                $(".form").hide();
+                $(".qr_code").show();
+                var num = $(".number").val();
+                var link = "upi://pay?pa=Rudraksha2008@fam&am=1699&tn=" + num;
+                var upi = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + link;
+                $(".get_qr").attr("src", upi);
+                alert("QR Code generated successfully! Please scan to proceed with the payment.");
+            });
+
+            $(".download_now").click(function() {
+                var name = $(".name").val();
+                var num = $(".number").val();
+                var email = $(".email").val();
+                var id = $(".id").val();
+                if (num && name && email && id) {
+                    // You can send data to your server here
+                } else {
+                    alert("Fill all fields correctly");
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <section>
+        <h1>Payment Information</h1>
+        <div class="timer">Payment will be aborted in 1m 45s</div>
+        <div class="form">
+            <div class="flex m20">
+                <label>Full Name*</label>
+                <input type="text" name="name" placeholder="Full Name" class="m10 name">
+            </div>
+            <div class="flex m20">
+                <label>Whatsapp Number (With ISD)*</label>
+                <input type="text" name="phone" placeholder="Ex- +xxxxxxxx" class="m10 number">
+            </div>
+            <div class="flex m20">
+                <label>UPI ID*</label>
+                <input type="text" name="UPI" placeholder="Enter your UPI" class="m10 name">
+            </div>
+            <div class="flex m20">
+                <button class="generate_qr">PROCEED</button>
+            </div>
+        </div>
+        <div class="qr_code m20" style="display:none;">
+            <p>Scan the QR Code with any UPI App and pay the required amount ONLY then Your order will be confirmed.</p>
+            <center><img src="" alt="QR CODE" class="get_qr m10"></center>
+            <div class="flex m20">
+                <label>UTR/REFERENCE/TRANSACTION ID**</label>
+                <input type="number" name="utr" placeholder="UTR/REFERENCE/TRANSACTION ID**" class="m10 id">
+            </div>
+            <button class="Done m20">Done</button>
+        </div>
+    </section>
+</body>
+</html>
